@@ -1,0 +1,35 @@
+### Extensión "REST Client": clic en "Send Request" sobre cada bloque
+
+### 1. SINPE Móvil (nace CAPTURED)
+POST http://localhost:8080/payments
+Content-Type: application/json
+Idempotency-Key: demo-sinpe-1
+
+{"amount":5000,"currency":"CRC","method":{"type":"SINPE_MOVIL","phone":"88887777"}}
+
+### 2. Tarjeta (nace AUTHORIZED)
+POST http://localhost:8080/payments
+Content-Type: application/json
+Idempotency-Key: demo-card-1
+
+{"amount":25.50,"currency":"USD","method":{"type":"CARD","token":"tok_visa","brand":"VISA"}}
+
+### 3. Tarjeta rechazada
+POST http://localhost:8080/payments
+Content-Type: application/json
+Idempotency-Key: demo-card-declined
+
+{"amount":10,"currency":"USD","method":{"type":"CARD","token":"tok_declined"}}
+
+### 4. Transferencia (queda PENDING)
+POST http://localhost:8080/payments
+Content-Type: application/json
+Idempotency-Key: demo-bank-1
+
+{"amount":100,"currency":"USD","method":{"type":"BANK_TRANSFER","iban":"CR05015202001026284066"}}
+
+### 5. Capturar (reemplaza ID por el paymentId de la tarjeta)
+POST http://localhost:8080/payments/REEMPLAZAR_ID/capture
+
+### 6. Reembolsar (reemplaza ID por un pago CAPTURED)
+POST http://localhost:8080/payments/REEMPLAZAR_ID/refund
